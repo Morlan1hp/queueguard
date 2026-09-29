@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QueueGuard — evaluation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;600&family=Oswald:wght@500;600&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<style>
+  .page { max-width: 1320px; margin: 0 auto; padding: 24px 20px 60px; }
+  .page h1 { font-family: var(--display); font-weight: 600; font-size: 40px; margin: 0 0 4px; }
+  .page h1 span { color: var(--amber); }
+  .page h2 { font-family: var(--display); font-weight: 500; font-size: 26px; margin: 34px 0 10px; }
+  .page p, .page li { color: #C9CFD6; font-size: 16px; line-height: 1.55; }
+  .headline { font-size: 22px; line-height: 1.45; background: var(--panel); border: 1px solid var(--border); border-left: 5px solid var(--amber); border-radius: 10px; padding: 16px 20px; margin: 18px 0; }
+  .headline b { color: var(--amber); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  th { color: var(--muted); font-weight: 600; font-size: 13px; }
+  tr.qg td { color: var(--amber); }
+  .charts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .chart { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+  .chart h3 { font-family: var(--display); font-weight: 500; font-size: 18px; margin: 0 0 6px; }
+  .chart svg { width: 100%; height: auto; display: block; }
+  .run { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .run button, .run select { background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 7px 12px; font-size: 14px; }
+  .run button.primary { background: var(--amber); color: #14181D; border-color: var(--amber); font-weight: 600; }
+  progress { width: 260px; }
+  .muted { color: var(--muted); font-size: 13px; }
+  @media (max-width: 900px) { .charts { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Queue<span>Guard</span> — evaluation</h1>
+  <p>Every variant sees the <b>same arrivals and the same drivers</b> for a given seed (common random numbers), so differences come from the warning strategy only.
+     Driver behaviour parameters are stated assumptions (see <a href="https://github.com/Morlan1hp/queueguard/blob/main/docs/ASSUMPTIONS.md" id="assump">docs/ASSUMPTIONS.md</a>) and are varied below.
+     Results are relative comparisons under those assumptions — not a prediction of real crash reductions, which needs a field pilot.</p>
+  <div class="run">
+    <a href="index.html">← Live demo</a>
+    <span class="muted" id="src">Showing pre-computed results.</span>
+    <label class="muted">Seeds per variant <select id="n"><option>10</option><option selected>20</option><option>40</option></select></label>
+    <button class="primary" id="rerun">Re-run in this browser</button>
+    <progress id="prog" value="0" max="1" hidden></progress>
+  </div>
+  <div class="headline" id="headline">Loading…</div>
+
+  <h2>1 · Main comparison and ablations</h2>
+  <div style="overflow-x:auto"><table id="main"></table></div>
+  <div class="charts" style="margin-top:16px">
+    <div class="chart"><h3>Severe end-of-queue conflicts per hour</h3><div id="c-conf"></div></div>
+    <div class="chart"><h3>Arrival speed at the queue (85th pct, km/h)</h3><div id="c-app"></div></div>
+    <div class="chart"><h3>Queue time with no timely warning</h3><div id="c-unc"></div></div>
+    <div class="chart"><h3>Throughput past the work zone (veh/h)</h3><div id="c-thr"></div></div>
+  </div>
+
+  <h2>2 · Sensitivity to the behaviour assumptions</h2>
+  <p>If QueueGuard only worked under optimistic assumptions it would not be worth piloting. Each chart varies one assumption and keeps the rest at the defaults.</p>
+  <div class="charts">
+    <div class="chart"><h3>Chance a driver notices a warning</h3><div id="s-pn"></div></div>
+    <div class="chart"><h3>Distance at which unwarned drivers recognise stopped traffic</h3><div id="s-rec"></div></div>
+    <div class="chart"><h3>Peak demand (longer queues)</h3><div id="s-dem"></div></div>
+    <div class="chart"><h3>Warning placed too late (real tail within 150 m of the warning point 90 s later)</h3><div id="s-pred"></div><p class="muted" id="s-pred-note"></p></div>
+  </div>
+  <p class="muted" id="meta"></p>
+</div>
+<pre id="out" hidden></pre>
+<script src="js/sim.js"></script>
+<script src="js/eval.js"></script>
+<script src="results/results.js"></script>
+<script src="js/evalpage.js"></script>
+</body>
+</html>

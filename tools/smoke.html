@@ -1,0 +1,31 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>smoke</title></head>
+<body><pre id="out">running</pre>
+<script src="../js/sim.js"></script>
+<script>
+(function () {
+  var q = new URLSearchParams(location.search);
+  var seeds = (q.get('seeds') || '1').split(',').map(Number);
+  var strategies = (q.get('s') || 'static,fixedqws,queueguard').split(',');
+  var extra = {};
+  q.forEach(function (v, k) { if (k !== 'seeds' && k !== 's') extra[k] = isNaN(+v) ? v : +v; });
+  var out = [];
+  try {
+    seeds.forEach(function (seed) {
+      strategies.forEach(function (st) {
+        var t0 = performance.now();
+        var opt = QG.merge(extra, { seed: seed, strategy: st });
+        var r = QG.runScenario(opt);
+        r.ms = Math.round(performance.now() - t0);
+        out.push(r);
+      });
+    });
+    document.getElementById('out').textContent = JSON.stringify(out, function (k, v) {
+      return typeof v === 'number' ? Math.round(v * 1000) / 1000 : v;
+    }, 1);
+  } catch (e) {
+    document.getElementById('out').textContent = 'ERROR ' + e.message + '\n' + e.stack;
+  }
+})();
+</script>
+</body></html>

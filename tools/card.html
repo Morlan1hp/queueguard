@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>card</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=Oswald:wght@500;600&display=swap">
+<style>
+  html, body { margin: 0; width: 1920px; height: 1080px; background: #14181D; color: #F2EFE8; font-family: "IBM Plex Sans", Arial, sans-serif; overflow: hidden; }
+  .c { position: absolute; inset: 0; padding: 150px 170px; display: flex; flex-direction: column; justify-content: center; gap: 28px; }
+  .eyebrow { color: #F5A623; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; font-size: 28px; }
+  h1 { font-family: Oswald, "Arial Narrow", sans-serif; font-weight: 600; font-size: 150px; line-height: 1.02; margin: 0; }
+  h1 span { color: #F5A623; }
+  h2 { font-family: Oswald, "Arial Narrow", sans-serif; font-weight: 500; font-size: 84px; line-height: 1.1; margin: 0; }
+  p { font-size: 40px; line-height: 1.4; color: #C9CFD6; margin: 0; max-width: 1500px; }
+  p b { color: #F5A623; font-weight: 600; }
+  .src { position: absolute; left: 170px; bottom: 70px; font-size: 24px; color: #8A949E; }
+  .bar { position: absolute; left: 0; top: 0; width: 24px; height: 100%; background: #F5A623; }
+  ol { font-size: 40px; line-height: 1.5; color: #C9CFD6; margin: 0; padding-left: 50px; }
+  ol b { color: #F2EFE8; }
+</style></head>
+<body><div class="bar"></div><div class="c" id="c"></div><div class="src" id="src"></div>
+<script>
+  var q = new URLSearchParams(location.search), CARDS = {
+    title: { h: '<div class="eyebrow">FEIT Hackathon 2026 · RPM Hire · End of Queue Detection</div><h1>Queue<span>Guard</span></h1><p>Warnings that move with the queue</p>' },
+    problem: { h: '<div class="eyebrow">The problem</div><h2>A roadworks queue grows upstream.<br>The warning signs don\'t move.</h2><p>Signs are set out before the shift. Minutes later the queue tail sits behind them, and drivers at 100 km/h meet stopped traffic with no warning.</p>' },
+    evidence: { h: '<div class="eyebrow">What the evidence says</div><h2>Detecting the queue is not enough.</h2><p>In a 2025 TfNSW / Deakin field trial (13 sites, 116 days), a commercial queue warning system and monochrome VMS had <b>limited or no measurable effect</b>. Colour VMS and flashing queue signs reduced speeding.</p><p>The warning has to be <b>in the right place, at the right time, and believable</b>.</p>',
+      src: 'Source: TfNSW / Deakin University, Work Zone End of Queue Study – Summary Report (iMOVE, April 2025)' },
+    how: { h: '<div class="eyebrow">How QueueGuard works</div><ol><li><b>Sense</b> — radar on the VMS trailers RPM already hires</li><li><b>Predict</b> — where the queue tail will be in 90 seconds</li><li><b>Act</b> — colour VMS at stopping distance, VSL 100 → 80 → 60, worker and truck alerts</li><li><b>Guide</b> — a site end-of-queue plan generated from the same model</li></ol>' },
+    method: { h: '<div class="eyebrow">Fair test</div><h2>Same traffic. Same drivers. Only the warnings differ.</h2><p>A traffic microsimulation (IDM car following, merging, distraction). Every driver has the <b>same 60% chance</b> of noticing any sign — QueueGuard gets no credit for colour, only for <b>placement and timing</b>.</p>' },
+    results: { h: '<div class="eyebrow">Results · 40 seeds per variant</div><h2 id="rh">Results</h2><p id="rp"></p>' },
+    rollout: { h: '<div class="eyebrow">Path to deployment with RPM Hire</div><ol><li><b>Month 1–2 · shadow mode</b> — run on RPM Track radar data, no control, compare predicted vs CCTV tail</li><li><b>Month 3–4 · site pilot</b> — live VMS/VSL control on 1–2 long-term sites, TfNSW before-after method</li><li><b>Then</b> — a hire add-on: software on kit RPM already owns</li></ol>' },
+    end: { h: '<h1>Queue<span>Guard</span></h1><p>Warnings that move with the queue.</p><p id="urlp" hidden>Live demo, code and evaluation: <b id="url"></b></p><p id="teamp" hidden>Team <b id="team"></b></p>' }
+  };
+  var k = q.get('card') || 'title', card = CARDS[k];
+  document.getElementById('c').innerHTML = card.h;
+  document.getElementById('src').textContent = card.src || '';
+  if (q.get('rh')) document.getElementById('rh').textContent = q.get('rh');
+  if (q.get('rp')) document.getElementById('rp').innerHTML = q.get('rp');
+  if (q.get('url') && document.getElementById('url')) { document.getElementById('url').textContent = q.get('url'); document.getElementById('urlp').hidden = false; }
+  if (q.get('team') && document.getElementById('team')) { document.getElementById('team').textContent = q.get('team'); document.getElementById('teamp').hidden = false; }
+</script></body></html>

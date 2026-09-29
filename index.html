@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QueueGuard — live end-of-queue warning demo</title>
+<meta name="description" content="QueueGuard predicts where a roadworks queue tail will be and moves VMS, variable speed limits and alerts with it. Side-by-side traffic simulation against static signs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=IBM+Plex+Sans:wght@400;600&family=Oswald:wght@500;600&display=swap">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <h1>Queue<span>Guard</span></h1>
+      <p>Warnings that move with the queue</p>
+    </div>
+    <div class="clock" id="clock">T+00:00<small id="demand">900 veh/h</small></div>
+    <div class="controls">
+      <button class="primary" id="play">Pause</button>
+      <label>Speed <select id="speed">
+        <option value="5">×5</option><option value="10">×10</option><option value="20" selected>×20</option><option value="40">×40</option><option value="80">×80</option>
+      </select></label>
+      <label>Seed <input type="number" id="seed" min="1" max="999" value="9"></label>
+      <label><input type="checkbox" id="failsafe"> Comms loss at 30 min</label>
+      <button id="restart">Restart</button>
+      <span class="nav"><a href="eval.html">Evaluation</a><a href="guideline.html">Site guideline</a><a href="https://github.com/Morlan1hp/queueguard" id="repo" target="_blank" rel="noopener">Code</a></span>
+    </div>
+  </header>
+
+  <section class="scoreboard" aria-label="Running comparison">
+    <div class="score"><div class="lbl">Severe end-of-queue conflicts<br>(TTC ≤ 1 s or DRAC ≥ 3.4 m/s²)</div><div class="vals"><span class="a" id="sc-conf-a">0<small>static</small></span><span class="b" id="sc-conf-b">0<small>QueueGuard</small></span></div></div>
+    <div class="score"><div class="lbl">Arrival speed at the queue<br>(85th percentile, km/h)</div><div class="vals"><span class="a" id="sc-app-a">–<small>static</small></span><span class="b" id="sc-app-b">–<small>QueueGuard</small></span></div></div>
+    <div class="score"><div class="lbl">Queue time with no timely warning<br>(150–1500 m before the tail)</div><div class="vals"><span class="a" id="sc-unc-a">–<small>static</small></span><span class="b" id="sc-unc-b">–<small>QueueGuard</small></span></div></div>
+    <div class="score"><div class="lbl">Throughput past the work zone<br>(veh/h — safety must not cost capacity)</div><div class="vals"><span class="a" id="sc-thr-a">–<small>static</small></span><span class="b" id="sc-thr-b">–<small>QueueGuard</small></span></div></div>
+  </section>
+
+  <section class="panel" id="panel-a">
+    <div class="viz">
+      <div class="head"><span class="tag static">Without QueueGuard</span><h2>Static roadworks signs at fixed positions</h2><span class="sub">same traffic, same drivers</span></div>
+      <canvas class="corridor" id="cor-a" aria-label="Corridor view, static signs"></canvas>
+      <canvas class="zoom" id="zoom-a" aria-label="Zoom on the queue tail, static signs"></canvas>
+    </div>
+    <div class="kpis" id="kpi-a"></div>
+  </section>
+
+  <section class="panel" id="panel-b">
+    <div class="viz">
+      <div class="head"><span class="tag qg">With QueueGuard</span><h2>Predicted tail · colour VMS chain · variable speed limits · alerts</h2></div>
+      <canvas class="corridor" id="cor-b" aria-label="Corridor view, QueueGuard"></canvas>
+      <canvas class="zoom" id="zoom-b" aria-label="Zoom on the queue tail, QueueGuard"></canvas>
+    </div>
+    <div class="kpis" id="kpi-b"></div>
+  </section>
+
+  <section class="bottom">
+    <div class="card">
+      <h3>Roadside devices <small>what drivers see now (QueueGuard)</small></h3>
+      <div class="boards" id="boards"></div>
+      <div class="vsls" id="vsls"></div>
+      <div class="legend">
+        <span>Speed</span><span class="ramp" id="ramp"></span><span>0 → 100+ km/h</span>
+        <span><i style="background:transparent;border:2px solid #C39BFF"></i>eyes off road</span>
+        <span><i style="background:#F5A623;border-radius:50%"></i>warned &amp; alert</span>
+        <span><i style="background:#FF2A2A"></i>braking</span>
+        <span><i style="background:transparent;border:2px solid #FF5A4E;border-radius:50%"></i>severe conflict</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Time–space diagram <small>QueueGuard run · white = true tail, amber = estimated from detectors only</small></h3>
+      <canvas class="ts" id="ts" aria-label="Time-space speed diagram"></canvas>
+    </div>
+    <div class="card">
+      <h3>Alerts <small>supervisor dashboard &amp; worker phones</small></h3>
+      <div class="uhf" id="uhf"><span class="st">UHF CB 40</span><span id="uhf-text" class="note">No message drafted.</span><button id="uhf-btn" disabled>Confirm</button></div>
+      <ul class="feed" id="feed"></ul>
+    </div>
+  </section>
+</div>
+<div class="caption" id="caption"></div>
+
+<script src="js/sim.js"></script>
+<script src="js/render.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

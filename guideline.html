@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QueueGuard — site end-of-queue guideline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=Oswald:wght@500;600&display=swap">
+<style>
+  :root { --ink: #14181D; --muted: #56606B; --line: #D9D4C8; --paper: #FBFAF6; --amber: #B86E00; --amberBg: #FFF3DC; --red: #B3261E; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #E9E6DE; color: var(--ink); font-family: "IBM Plex Sans", Arial, sans-serif; }
+  .wrap { display: grid; grid-template-columns: 380px 1fr; gap: 24px; max-width: 1400px; margin: 0 auto; padding: 24px; }
+  form { background: #14181D; color: #E8EAED; border-radius: 12px; padding: 18px 20px; position: sticky; top: 16px; align-self: start; }
+  form h1 { font-family: Oswald, "Arial Narrow", sans-serif; font-weight: 600; font-size: 28px; margin: 0 0 4px; }
+  form h1 span { color: #F5A623; }
+  form p { color: #98A2AD; font-size: 13px; margin: 0 0 14px; }
+  form label { display: grid; grid-template-columns: 1fr 120px; align-items: center; gap: 8px; font-size: 13.5px; margin: 7px 0; color: #C9CFD6; }
+  form input, form select { background: #1D232A; color: #E8EAED; border: 1px solid #28303A; border-radius: 6px; padding: 6px 8px; font-size: 14px; width: 100%; }
+  form input[type=text] { grid-column: 1 / -1; }
+  form .full { grid-template-columns: 1fr; }
+  form button { margin-top: 12px; width: 100%; background: #F5A623; color: #14181D; border: 0; border-radius: 6px; padding: 9px; font-weight: 600; font-size: 15px; cursor: pointer; }
+  form a { color: #F5A623; font-size: 13px; }
+  .doc { background: var(--paper); border-radius: 6px; padding: 44px 56px; box-shadow: 0 2px 14px rgba(0,0,0,0.12); }
+  .doc h1 { font-family: Oswald, "Arial Narrow", sans-serif; font-weight: 600; font-size: 32px; margin: 0; }
+  .doc .sub { color: var(--muted); margin: 4px 0 18px; }
+  .doc h2 { font-family: Oswald, "Arial Narrow", sans-serif; font-weight: 500; font-size: 21px; margin: 26px 0 8px; border-bottom: 2px solid var(--ink); padding-bottom: 4px; }
+  .doc p, .doc li { font-size: 14.5px; line-height: 1.55; }
+  .doc table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 6px 0; }
+  .doc th, .doc td { border: 1px solid var(--line); padding: 6px 9px; text-align: left; vertical-align: top; }
+  .doc th { background: #F0ECE2; }
+  .kv { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .kv div { border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; }
+  .kv b { display: block; font-size: 22px; font-family: Oswald, "Arial Narrow", sans-serif; font-weight: 500; }
+  .kv span { font-size: 12.5px; color: var(--muted); }
+  .risk { display: inline-block; padding: 3px 10px; border-radius: 5px; font-weight: 600; }
+  .risk.High { background: #FDE2DF; color: var(--red); } .risk.Medium { background: var(--amberBg); color: var(--amber); } .risk.Low { background: #E2F2EC; color: #1E6B52; }
+  .led { font-family: Consolas, monospace; font-weight: 700; background: #111; color: #F5A623; padding: 2px 6px; border-radius: 3px; white-space: nowrap; }
+  .warnbox { background: var(--amberBg); border-left: 4px solid var(--amber); padding: 10px 14px; font-size: 13.5px; margin-top: 14px; }
+  svg text { font-family: "IBM Plex Sans", Arial, sans-serif; }
+  @media print {
+    body { background: #fff; } .wrap { display: block; padding: 0; } form { display: none; }
+    .doc { box-shadow: none; padding: 0 8mm; } h2 { break-after: avoid; } table, .kv { break-inside: avoid; }
+  }
+  @media (max-width: 1000px) { .wrap { grid-template-columns: 1fr; } form { position: static; } .kv { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <form id="f" onsubmit="return false">
+    <h1>Queue<span>Guard</span> guideline</h1>
+    <p>Fill in the site. The end-of-queue plan on the right updates instantly; print it or save it as a PDF for the traffic management plan.</p>
+    <label class="full">Site / road<input type="text" id="site" value="Example freeway — outbound, lane closure for barrier works"></label>
+    <label>Posted speed (km/h)<select id="speed"><option>60</option><option>80</option><option selected>100</option><option>110</option></select></label>
+    <label>Lanes in this direction<input type="number" id="lanes" value="2" min="1" max="5"></label>
+    <label>Lanes closed<input type="number" id="closed" value="1" min="1" max="4"></label>
+    <label>Peak demand (veh/h, this direction)<input type="number" id="demand" value="1800" step="50"></label>
+    <label>Work-zone capacity per open lane (veh/h)<input type="number" id="cap" value="1250" step="50"></label>
+    <label>Heavy vehicles (%)<input type="number" id="hv" value="10" min="0" max="60"></label>
+    <label>Time demand exceeds capacity (h)<input type="number" id="dur" value="0.5" step="0.25" min="0"></label>
+    <label>Crest or curve limits sight of the queue<select id="sight"><option value="0">No</option><option value="1">Yes</option></select></label>
+    <label>Works period<select id="period"><option>Day</option><option selected>Night</option><option>24 h</option></select></label>
+    <button type="button" onclick="window.print()">Print / save as PDF</button>
+    <p style="margin-top:12px"><a href="index.html">← Live demo</a> · <a href="eval.html">Evaluation</a></p>
+  </form>
+  <article class="doc" id="doc"></article>
+</div>
+<script src="js/guideline.js"></script>
+</body>
+</html>
