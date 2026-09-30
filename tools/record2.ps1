@@ -96,7 +96,7 @@ new Promise(function (res) {
 })
 '@
   Still "$base/guideline.html?trial=1" 7 $trialJs
-  Still "$base/tools/card.html?card=rollout" 8
+  Still "$base/tools/card.html?card=rollout" 10
   $endQ = 'card=end'
   if ($Team) { $endQ += '&team=' + [Uri]::EscapeDataString($Team) }
   if ($Url) { $endQ += '&url=' + [Uri]::EscapeDataString($Url) }
