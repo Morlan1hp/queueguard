@@ -87,4 +87,7 @@ function render(t) {
 window.render = render;
 var q = new URLSearchParams(location.search);
 render(q.has('t') ? +q.get('t') : 7);
+// canvas text does not trigger web-font loading: load the faces, then draw again (stills use the right fonts)
+if (document.fonts) Promise.all(['600 64px Oswald', '400 22px "IBM Plex Sans"', '600 22px "IBM Plex Sans"'].map(function (f) { return document.fonts.load(f); }))
+  .then(function () { render(q.has('t') ? +q.get('t') : 7); });
 </script></body></html>

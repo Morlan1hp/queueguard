@@ -6,6 +6,8 @@ Roadworks queues grow upstream, often by several kilometres an hour. Warning sig
 
 **Live demo:** open `index.html` (GitHub Pages link below) · **Evaluation:** `eval.html` · **Site guideline generator:** `guideline.html` · **Demo video:** `media/queueguard-demo.mp4`
 
+**Final pitch (Team noname):** presenter deck `pitch/` (arrow keys; the 42 s demo clip plays on slide 7; N = notes, T = timer, A = appendix) · PDF `docs/QueueGuard_final_pitch_Team_noname.pdf` · clip `media/queueguard-pitch-clip.mp4`
+
 ## Why this design
 
 A 2025 Transport for NSW / Deakin University field trial of end-of-queue treatments (13 sites, 116 days) found that a commercial queue warning system and monochrome VMS had limited or no measurable effect, while colour VMS and flashing queue-warning signs reduced speeding. Manual UHF broadcasts helped; automatic ones did not. So detecting the queue is not the hard part. The warning has to be **in the right place, at the right time, and believable**. QueueGuard is built around that:
@@ -20,15 +22,18 @@ A 2025 Transport for NSW / Deakin University field trial of end-of-queue treatme
 
 ## What is new
 
-Queue warning itself is proven: on I-35 in Texas, an end-of-queue warning system cut work-zone crashes by up to 45% (TxDOT Waco District, via the Work Zone Safety Clearinghouse). Standard systems work by having sensors downstream switch a fixed upstream sign when slow traffic is detected. QueueGuard keeps that idea and changes how the warning is placed, timed and trusted:
+Queue warning itself is proven, and commercial portable systems already exist, including for hire in Australia: on I-35 in Texas, an end-of-queue warning system cut work-zone crashes by up to 45% (TxDOT Waco District, via the Work Zone Safety Clearinghouse). RPM's own boards can already show live Mooven journey data. QueueGuard does not compete on detection. It is the control layer the RPM brief asks for, linking VMS, VSL and alerts, and it changes where, when and how believably the warning appears:
 
-| Capability | Standard queue warning | QueueGuard |
+| | Typical queue warning (public descriptions) | QueueGuard |
 |---|---|---|
-| Warning follows the tail, predicted 90 s ahead | fixed sign | yes |
-| Timed into the 150–1,500 m alert window (not forgotten, not too late) | fixed distance | yes |
-| Credibility guard: no queue message without a queue; 60 s hold | partly | yes |
-| Trucks: supervisor-confirmed UHF (manual broadcasts worked in the NSW trial, automatic did not) | no | yes |
-| Plans the site and pre-tests it with TfNSW metrics (`guideline.html` → *Run virtual trial*) | no | yes |
+| Warning position | fixed boards, switched when slow traffic is detected | board chosen from the tail predicted 90 s ahead |
+| Warning timing | wherever a board happens to sit | into the 150–1,500 m alert window (not forgotten, not too late) |
+| VMS, VSL and alerts | separate products | one controller, as the brief asks |
+| Credibility | varies by system | no queue message without a detected queue; 60 s hold; fail-safe |
+| Trucks | varies by system | UHF drafted, supervisor confirms (manual broadcasts worked in the NSW trial, automatic did not) |
+| Before set-up | standard layout | site plan pre-tested with TfNSW metrics (`guideline.html` → *Run virtual trial*) |
+
+In the simulation a fixed-position queue warning system gave only 7% fewer severe end-of-queue conflicts than static signs; QueueGuard gave 68% fewer (Results below).
 
 ## Viability
 
@@ -70,7 +75,8 @@ No build step and no install. Open `index.html` in any modern browser (or the Gi
 * `eval.html` — full results; **Re-run in this browser** repeats the experiment
 * `guideline.html` — site end-of-queue plan, printable to PDF
 * `tools/evaluate.ps1` — headless batch evaluation (Microsoft Edge) → `results/`
-* `tools/record.ps1` — renders the demo video (Edge + ffmpeg)
+* `tools/record2.ps1` — renders the demo video (Edge + ffmpeg); `tools/pitchclip.ps1` — the 42 s clip for the pitch
+* `pitch/index.html` — the final pitch deck as a presenter page (built from the slide sources, clip from `media/`)
 
 ```
 js/sim.js        traffic model, QueueGuard controller, metrics
