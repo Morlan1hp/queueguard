@@ -16,7 +16,7 @@ A 2025 Transport for NSW / Deakin University field trial of end-of-queue treatme
 |---|---|
 | **Sense** | 20 s mean speeds from radar every 400 m. RPM Track, RPM's 4G platform for VMS, radar and CCTV data, is the natural source. The logic is sensor-agnostic. |
 | **Predict** | Queued/free state with hysteresis; tail interpolated between detectors; tail velocity (shockwave) by least squares over 180 s, extrapolated 90 s |
-| **Act** | First VMS upstream of *predicted tail − stopping distance* shows **STOPPED TRAFFIC / PREPARE TO STOP** (flashing); boards further upstream show **QUEUE AHEAD x KM**; VSL steps 100 → 80 → 60 (≤ 20 km/h per step); worker phone alert when a vehicle approaches the tail above 80 km/h; UHF CB 40 message for trucks drafted automatically, **confirmed by the supervisor** |
+| **Act** | First VMS upstream of *predicted tail − stopping distance* shows **STOPPED TRAFFIC / PREPARE TO STOP** (flashing); boards further upstream show **QUEUE AHEAD x KM**; VSL steps 100 → 80 → 60 (≤ 20 km/h per step); crew alert when a vehicle passes a radar within 450 m of the tail above 80 km/h (shown on the dashboard; phone delivery is pilot integration, and it is not counted in the results); UHF CB 40 message for trucks drafted automatically, **confirmed by the supervisor** |
 | **Stay credible** | No queue message without a detected queue; escalate at once, relax only after 60 s; fail-safe: no data for 60 s → every board PREPARE TO STOP, VSL 80 |
 | **Guide** | `guideline.html` turns site inputs into an end-of-queue plan: expected queue length and growth, device positions, message library, thresholds, alert roles, monitoring KPIs |
 
@@ -33,12 +33,12 @@ Queue warning itself is proven, and commercial portable systems already exist, i
 | Trucks | varies by system | UHF drafted, supervisor confirms (manual broadcasts worked in the NSW trial, automatic did not) |
 | Before set-up | standard layout | site plan pre-tested with TfNSW metrics (`guideline.html` → *Run virtual trial*) |
 
-In the simulation a fixed-position queue warning system gave only 7% fewer severe end-of-queue conflicts than static signs; QueueGuard gave 68% fewer (Results below).
+In the simulation a fixed-position queue warning system gave only 6% fewer severe end-of-queue conflicts than static signs (not statistically different); QueueGuard gave 68% fewer (Results below).
 
 ## Viability
 
 * **Business:** a per-site-week software add-on to VMS, VSL and radar kit RPM already hires. It lifts utilisation of those assets and gives Tier-1 clients safety data for their reporting.
-* **Uptake:** no new hardware; VSL values only within the approved traffic management plan; the supervisor confirms UHF broadcasts and can override any message; fail-safe to PREPARE TO STOP.
+* **Uptake:** no new hardware; VSL values only within the approved traffic management plan; a person confirms every UHF broadcast (the simulation assumes confirmation within 20 s); fail-safe to PREPARE TO STOP. Manual override of any sign is part of the pilot build.
 * **Value:** the Texas system saved an estimated $1.4–1.8M in societal crash costs. A severe end-of-queue crash also stops the job.
 
 ## Results
@@ -56,7 +56,9 @@ Traffic microsimulation (Intelligent Driver Model, merging, driver distraction; 
 * Severe EoQ conflict = follower approaching a queued vehicle with TTC ≤ 1 s or DRAC ≥ 3.4 m/s², the serious-conflict thresholds used by TfNSW/Deakin.
 * **−68% severe end-of-queue conflicts** and **−14 km/h** 85th-percentile arrival speed, with **no throughput or travel-time penalty** (715 s vs 714 s).
 * **Sensitivity:** QueueGuard stays ahead of static signs when only 20% of drivers notice a warning, for recognition distances from 100–200 m to 250–450 m, and for peak demand of 1,600–2,000 veh/h (see `eval.html`).
-* **Honest detail:** the 90 s tail prediction cuts "warning placed too late" from 10.9% to 6.7% of cases, but its point error (149 m) is no better than the current estimate (137 m), because the 400 m detector spacing dominates. Its value is moving warnings upstream while the queue grows.
+* **Honest detail:** the 90 s tail prediction cuts "warning placed too late" from 10.9% to 6.7% of cases, but its point error (149 m) is no better than the current estimate (137 m), likely limited by the 400 m detector spacing and 20 s averaging (not varied in the experiments). Its value is moving warnings upstream while the queue grows.
+* **Paired by seed** (every option sees the same drivers, `tools/paired.html`): QueueGuard − static = −0.48 severe conflicts per hour, 95% CI −0.85 to −0.12 (relative −68%, bootstrap 95% CI −29% to −90%); fixed-position − static = −0.05, 95% CI −0.39 to +0.30, no measurable difference. The two separate intervals in the table overlap slightly; the paired difference is the right test.
+* **Known prototype limits:** only loss of all radar data at once is modelled (per-radar health checks come in the pilot); the site trial in `guideline.html` reuses the site's speed, demand and truck share on the standard closure, not its own geometry or sign layout.
 * These are relative comparisons under stated assumptions, not a forecast of real crash reductions. That is what the pilot below is for.
 
 ## Path to deployment with RPM Hire
@@ -65,7 +67,7 @@ Traffic microsimulation (Intelligent Driver Model, merging, driver distraction; 
 2. **Months 3–4, site pilot:** live VMS/VSL control on 1–2 sites. Evaluate with the TfNSW/Deakin before–after method (radar speeds, video conflicts, driver survey).
 3. **Then, hire add-on:** software on kit RPM already owns, plus the site guideline for the traffic management plan.
 
-VSL values must stay within the approved traffic management plan and speed-zone authorisation. The supervisor can override every decision.
+VSL values must stay within the approved traffic management plan and speed-zone authorisation. Manual override of every sign and limit by the site supervisor is part of the pilot build; the prototype already requires a person to confirm UHF broadcasts.
 
 ## Run it
 

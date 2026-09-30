@@ -1,0 +1,35 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>paired comparison</title></head>
+<body><pre id="out">running</pre>
+<script src="../js/sim.js"></script>
+<script>
+/* Paired (same-seed) comparison of severe end-of-queue conflicts per hour.
+   Every strategy sees the same drivers for a given seed (common random numbers), so the per-seed
+   difference is the right quantity to test. Usage: tools/headless.ps1 -Page tools/paired.html -Query "n=40" */
+(function () {
+  var q = new URLSearchParams(location.search), n = +(q.get('n') || 40);
+  var S = ['static', 'fixedqws', 'queueguard'], per = {};
+  S.forEach(function (s) { per[s] = []; });
+  for (var seed = 1; seed <= n; seed++) S.forEach(function (s) { per[s].push(QG.runScenario({ seed: seed, strategy: s }).eoqConflictsPerHour); });
+  function stat(a) { var m = a.reduce(function (p, c) { return p + c; }, 0) / a.length, ss = 0; a.forEach(function (v) { ss += (v - m) * (v - m); }); var sd = Math.sqrt(ss / (a.length - 1)); return { mean: m, sd: sd, ci: 1.96 * sd / Math.sqrt(a.length) }; }
+  function compare(a, b) {                       // b minus a, per seed
+    var d = a.map(function (v, i) { return b[i] - v; }), st = stat(d);
+    var better = d.filter(function (x) { return x < 0; }).length, worse = d.filter(function (x) { return x > 0; }).length;
+    // bootstrap over seeds for the relative change (deterministic resampling)
+    var r = QG.mulberry32(12345), rel = [];
+    for (var k = 0; k < 4000; k++) {
+      var sa = 0, sb = 0;
+      for (var j = 0; j < a.length; j++) { var i = Math.floor(r() * a.length); sa += a[i]; sb += b[i]; }
+      rel.push(sa > 0 ? sb / sa - 1 : 0);
+    }
+    rel.sort(function (x, y) { return x - y; });
+    var ma = stat(a).mean, mb = stat(b).mean;
+    return { diffMean: st.mean, diffCI: [st.mean - st.ci, st.mean + st.ci], relChange: mb / ma - 1,
+      relCI95: [rel[Math.floor(0.025 * rel.length)], rel[Math.floor(0.975 * rel.length)]],
+      seedsBetter: better, seedsWorse: worse, seedsTied: a.length - better - worse };
+  }
+  var out = { n: n, mean: {}, queueguard_vs_static: compare(per.static, per.queueguard), fixedqws_vs_static: compare(per.static, per.fixedqws), queueguard_vs_fixedqws: compare(per.fixedqws, per.queueguard) };
+  S.forEach(function (s) { out.mean[s] = stat(per[s]); });
+  document.getElementById('out').textContent = JSON.stringify(out, function (k, v) { return typeof v === 'number' ? Math.round(v * 1000) / 1000 : v; }, 1);
+})();
+</script></body></html>

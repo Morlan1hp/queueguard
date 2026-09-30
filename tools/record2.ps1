@@ -71,12 +71,12 @@ try {
     @{ t0 = 1750; t1 = 2200; seconds = 7; spot = @('vsls');           caption = 'Variable speed limits step <b>100 → 80 → 60</b>, so drivers reach the tail slower.' },
     @{ t0 = 2200; t1 = 2290; seconds = 5; spot = @('panel-a');        caption = 'Static signs again: the tail has grown past them — another severe conflict.' },
     @{ t0 = 2290; t1 = 2700; seconds = 7; spot = @('uhf', 'feed');    caption = 'A UHF message for truckies is drafted and <b>confirmed by the supervisor</b>; workers get high-speed alerts.' },
-    @{ t0 = 2700; t1 = 3400; seconds = 6; spot = $null;               caption = 'The queue clears. Messages relax only after a 60 s hold — no flicker, no false queue warnings.' },
+    @{ t0 = 2700; t1 = 3400; seconds = 6; spot = $null;               caption = 'After the peak the queue shrinks. Boards relax only after a 60 s hold — no flicker, no false queue warnings.' },
     @{ t0 = 3400; t1 = 3400; seconds = 4; spot = @('score');          caption = 'Same hour of traffic: <b>static signs vs QueueGuard</b>.' }
   )
   Sim "seed=$Seed&failsafe=1" @(
     @{ t0 = 1700; t1 = 1880; seconds = 4; spot = $null;               caption = 'Fail-safe test: detector data is cut at 30 minutes…' },
-    @{ t0 = 1880; t1 = 1960; seconds = 5; spot = @('boards', 'vsls'); caption = '…after 60 s every board shows <b>PREPARE TO STOP</b> and VSL drops to 80. It never fails silent.' }
+    @{ t0 = 1880; t1 = 1960; seconds = 5; spot = @('boards', 'vsls'); caption = '…after 60 s every board shows <b>PREPARE TO STOP</b> and VSL drops to 80. A lost data link never fails silent.' }
   )
   Anim "$base/tools/card.html?card=bars&t=0" 7
   Anim "$base/tools/card.html?card=newcard&t=0" 8

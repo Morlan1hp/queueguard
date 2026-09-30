@@ -177,9 +177,9 @@ body.shot #help, body.shot #timer, body.shot #notes { display: none !important; 
 <p style="font-size:28px;line-height:1.35;color:#C9CFD6">A plan for each site, tested in a virtual trial</p>
 </div>
 </div>
-<p style="position:absolute;left:128px;bottom:64px;width:1480px;font-size:24px;color:#98A2AD">Fail-safe: no data for 60 s → every board shows PREPARE TO STOP · the supervisor can override any message</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1480px;font-size:24px;color:#98A2AD">Fail-safe: no data for 60 s → every board shows PREPARE TO STOP · a person confirms every truck broadcast</p>
 <p style="position:absolute;left:1672px;bottom:64px;width:120px;font-size:24px;color:#98A2AD;text-align:right">6</p>
-<aside>(2:06–2:38) Four steps. Sense: radar reports speeds every 20 seconds. Predict: QueueGuard finds the tail and where it will be in 90 seconds. Act: the board a stopping distance before that point shows STOPPED TRAFFIC; limits step down 100, 80, 60; workers get a phone alert if a car arrives too fast; and the supervisor confirms a UHF call for truckies. Guide: before set-up, it generates the site's end-of-queue plan. [click — the clip starts by itself]</aside>
+<aside>(2:06–2:38) Four steps. Sense: radar reports speeds every 20 seconds. Predict: QueueGuard finds the tail and where it will be in 90 seconds. Act: the board a stopping distance before that point shows STOPPED TRAFFIC; limits step down 100, 80, 60; the crew gets an alert if a car arrives too fast; and the supervisor confirms a UHF call for truckies. Guide: before set-up, it generates the site's end-of-queue plan. [click — the clip starts by itself]</aside>
 </section>
 
 <section id="demo" data-transition="fade" style="background:#14181D;color:#F2EFE8;font-family:'IBM Plex Sans', Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:32px">
@@ -216,7 +216,7 @@ body.shot #help, body.shot #timer, body.shot #notes { display: none !important; 
 <div style="display:flex;flex-direction:row;align-items:center;gap:24px">
 <p style="width:470px;font-size:28px;color:#C9CFD6">Fixed-position queue warning</p>
 <div style="flex:1;display:flex;flex-direction:row"><div style="width:716px;height:56px;background:#8A949E;border-radius:6px"></div></div>
-<p style="width:290px;font-size:30px;color:#F2EFE8;text-align:right">0.67 · −7%</p>
+<p style="width:290px;font-size:30px;color:#F2EFE8;text-align:right">0.67 · −6%</p>
 </div>
 <div style="display:flex;flex-direction:row;align-items:center;gap:24px">
 <p style="width:470px;font-size:28px;font-weight:600;color:#F5A623">QueueGuard</p>
@@ -240,7 +240,7 @@ body.shot #help, body.shot #timer, body.shot #notes { display: none !important; 
 </div>
 <p style="position:absolute;left:128px;bottom:64px;width:1480px;font-size:24px;color:#98A2AD">Same drivers in every option · every sign has the same 60% chance of being noticed · severe = TTC ≤ 1 s or DRAC ≥ 3.4 m/s²</p>
 <p style="position:absolute;left:1672px;bottom:64px;width:120px;font-size:24px;color:#98A2AD;text-align:right">8</p>
-<aside>(3:25–4:05) Now the numbers: 40 random seeds, about 43 simulated peak hours per option, and the same drivers every time. Severe end-of-queue conflicts, using TfNSW's own thresholds: static signs, 0.72 an hour. A standard fixed-position queue warning system: 0.67 — only 7% better, which echoes the NSW trial. QueueGuard: 0.23. [pause] That's 68% fewer. Drivers reach the queue 14 km/h slower, no queue time goes unwarned, and throughput doesn't drop. And we gave QueueGuard no credit for colour: every sign has the same chance of being noticed. [click]</aside>
+<aside>(3:25–4:05) Now the numbers: 40 random seeds, about 43 simulated peak hours per option, and the same drivers every time. Severe end-of-queue conflicts, using TfNSW's own thresholds: static signs, 0.72 an hour. A standard fixed-position queue warning system: 0.67 — only 6% better, statistically no different, which echoes the NSW trial. QueueGuard: 0.23. [pause] That's 68% fewer. Drivers reach the queue 14 km/h slower, no queue time goes unwarned, and throughput doesn't drop. And we gave QueueGuard no credit for colour: every sign has the same chance of being noticed. [click]</aside>
 </section>
 
 <section id="robust" data-transition="fade" style="background:#14181D;color:#F2EFE8;font-family:'IBM Plex Sans', Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:40px">
@@ -254,7 +254,7 @@ body.shot #help, body.shot #timer, body.shot #notes { display: none !important; 
 <p style="font-family:'Oswald', 'Arial Narrow', sans-serif;font-size:150px;font-weight:600;line-height:1;color:#F5A623">8 / 8</p>
 <div style="flex:1"></div>
 <p style="font-size:32px;line-height:1.35;color:#F2EFE8">stress tests beat static signs: −29% to −94% severe conflicts</p>
-<p style="font-size:28px;line-height:1.4;color:#98A2AD">Remove the speed limits: −35%. Remove the prediction: −48%. Both parts matter.</p>
+<p style="font-size:28px;line-height:1.4;color:#98A2AD">Without speed limits 0.46, without prediction 0.37, full system 0.23 per hour: both parts help.</p>
 </div>
 <div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1E242B;border:1px solid #2E3740;border-radius:16px;padding:40px">
 <p style="font-size:26px;letter-spacing:2px;text-transform:uppercase;color:#98A2AD;font-weight:600">Buildable</p>
@@ -268,12 +268,12 @@ body.shot #help, body.shot #timer, body.shot #notes { display: none !important; 
 <p style="font-family:'Oswald', 'Arial Narrow', sans-serif;font-size:150px;font-weight:600;line-height:1;color:#F5A623">60 s</p>
 <div style="flex:1"></div>
 <p style="font-size:32px;line-height:1.35;color:#F2EFE8">without data → every board shows PREPARE TO STOP</p>
-<p style="font-size:28px;line-height:1.4;color:#98A2AD">The supervisor confirms truck calls and can override anything. Limits stay inside the approved traffic plan.</p>
+<p style="font-size:28px;line-height:1.4;color:#98A2AD">A person confirms every truck broadcast. Limits stay inside the approved traffic plan.</p>
 </div>
 </div>
 <p style="position:absolute;left:128px;bottom:64px;width:1480px;font-size:24px;color:#98A2AD">Stress tests: 20–80% of drivers noticing signs, 1,600–2,000 veh/h, queue spotted at 100–450 m · 20 seeds each (appendix A2)</p>
 <p style="position:absolute;left:1672px;bottom:64px;width:120px;font-size:24px;color:#98A2AD;text-align:right">9</p>
-<aside>(4:05–4:33) We tried to break it. In eight stress tests — drivers who barely notice signs, heavier traffic, queues spotted late — QueueGuard beat static signs every time. Remove the speed limits or the prediction and the gain shrinks: both matter. No new hardware: radar speeds in, messages out. And if data stops for 60 seconds, every board says prepare to stop. [click]</aside>
+<aside>(4:05–4:33) We tried to break it. In eight stress tests — drivers who barely notice signs, heavier traffic, queues spotted late — QueueGuard beat static signs every time. Remove the speed limits or the prediction and the gain shrinks: both help. No new hardware: radar speeds in, messages out. And if data stops for 60 seconds, every board says prepare to stop. [click]</aside>
 </section>
 
 <section id="new" data-transition="fade" style="background:#14181D;color:#F2EFE8;font-family:'IBM Plex Sans', Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;justify-content:space-between;gap:40px">
@@ -401,9 +401,10 @@ body.shot #help, body.shot #timer, body.shot #notes { display: none !important; 
 <tr><td>QueueGuard without VSL</td><td style="text-align:right">0.46 ± 0.29</td><td style="text-align:right">0.14</td><td style="text-align:right">64.7</td><td style="text-align:right">100%</td><td style="text-align:right">0%</td><td style="text-align:right">1,112</td></tr>
 <tr><td>QueueGuard without prediction</td><td style="text-align:right">0.37 ± 0.27</td><td style="text-align:right">0.05</td><td style="text-align:right">55.1</td><td style="text-align:right">100%</td><td style="text-align:right">0%</td><td style="text-align:right">1,113</td></tr>
 </table>
+<p style="font-size:26px;line-height:1.45;color:#F2EFE8"><b>Paired by seed</b> (same drivers): QueueGuard − static = −0.48 per hour, 95% CI −0.85 to −0.12 (relative −68%, bootstrap 95% CI −29% to −90%). Fixed-position − static = −0.05, 95% CI −0.39 to +0.30: no measurable difference.</p>
 <p style="font-size:26px;line-height:1.45;color:#98A2AD">Mean ± 95% CI over 40 seeds (about 43 simulated hours per option), same arrivals and drivers for every option. Mean travel time 713–716 s for every option. Severe conflict = TTC ≤ 1 s or DRAC ≥ 3.4 m/s² (TfNSW / Deakin). Collisions are rare events: read them as a direction, not a precise rate.</p>
 <p style="position:absolute;left:1672px;bottom:64px;width:120px;font-size:24px;color:#98A2AD;text-align:right">A1</p>
-<aside>Use if asked about confidence intervals, collisions, travel time or the ablations. Key lines: QueueGuard's interval (0.23 ± 0.17) does not overlap static signs (0.72 ± 0.33). Travel time is the same for every option, so safety costs no capacity.</aside>
+<aside>Use if asked "is it significant?", or about confidence intervals, collisions, travel time or the ablations. Say: because every option sees the same drivers, we compare seed by seed. The paired difference is −0.48 conflicts per hour with a 95% CI of −0.85 to −0.12, which excludes zero. The fixed-position system's difference includes zero, like the NSW trial found. The two separate intervals overlap slightly, so never claim they do not overlap. Over 40 seeds QueueGuard was better in 15, worse in 5 and tied in 20 (many seeds have no conflict in either).</aside>
 </section>
 
 <section id="a-stress" data-transition="fade" style="background:#1B2128;color:#F2EFE8;font-family:'IBM Plex Sans', Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:32px">
@@ -437,13 +438,13 @@ body.shot #help, body.shot #timer, body.shot #notes { display: none !important; 
 <tr><td style="color:#F5A623;font-weight:600">Locate</td><td>Tail interpolated between radars 400 m apart</td></tr>
 <tr><td style="color:#F5A623;font-weight:600">Predict</td><td>Tail speed fitted by least squares over the last 180 s, projected 90 s ahead</td></tr>
 <tr><td style="color:#F5A623;font-weight:600">Place</td><td>First board at least 300 m upstream of the predicted tail: STOPPED TRAFFIC / PREPARE TO STOP, flashing; boards further upstream: QUEUE AHEAD x KM</td></tr>
-<tr><td style="color:#F5A623;font-weight:600">Slow</td><td>VSL 100 → 80 → 60, at most 20 km/h per step, 60 s hold</td></tr>
-<tr><td style="color:#F5A623;font-weight:600">Alert</td><td>Worker phones: vehicle above 80 km/h within 450 m of the tail · UHF CB 40 message drafted, the supervisor confirms</td></tr>
+<tr><td style="color:#F5A623;font-weight:600">Slow</td><td>80 within 2.1 km of the risk point, 60 within 900 m; neighbouring signs differ by at most 20 km/h; relax only after a 60 s hold</td></tr>
+<tr><td style="color:#F5A623;font-weight:600">Alert</td><td>Crew alert when a vehicle passes a radar within 450 m of the tail above 80 km/h (dashboard now, phones in the pilot) · UHF CB 40 message drafted, a person confirms</td></tr>
 <tr><td style="color:#F5A623;font-weight:600">Trust</td><td>Escalate at once, relax only after a 60 s hold; no queue message without a detected queue</td></tr>
 <tr><td style="color:#F5A623;font-weight:600">Fail-safe</td><td>No data for 60 s: every board PREPARE TO STOP, VSL 80</td></tr>
 </table>
 <p style="position:absolute;left:1672px;bottom:64px;width:120px;font-size:24px;color:#98A2AD;text-align:right">A3</p>
-<aside>Use if asked how it decides, how it avoids flicker or false alarms, or what happens when comms drop. Every threshold is a parameter the site plan can change.</aside>
+<aside>Use if asked how it decides, how it avoids flicker or false alarms, or what happens when comms drop. Warning offset, hold time and prediction horizon are settings; the other thresholds are engineering defaults that shadow mode will calibrate against real radar data.</aside>
 </section>
 
 <section id="a-limits" data-transition="fade" style="background:#1B2128;color:#F2EFE8;font-family:'IBM Plex Sans', Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:32px">
@@ -455,8 +456,8 @@ body.shot #help, body.shot #timer, body.shot #notes { display: none !important; 
 <tr><th style="width:38%;text-align:left;color:#98A2AD">Open question</th><th style="width:62%;text-align:left;color:#98A2AD">How we close it</th></tr>
 <tr><td>Real drivers, not simulated ones</td><td>Shadow mode on RPM Track data, predicted tail against CCTV; then a TfNSW-style before–after pilot</td></tr>
 <tr><td>How many drivers notice a sign (we assume 60%)</td><td>Stress-tested from 20% to 80%: QueueGuard stays ahead; the pilot measures real speed change</td></tr>
-<tr><td>Tail prediction error ≈ 150 m, set by 400 m radar spacing</td><td>No more precise than the current estimate; its value is moving warnings upstream sooner (late placements 10.9% → 6.7%). Denser radar or probe data can sharpen it</td></tr>
-<tr><td>Legal use of variable limits</td><td>Only values inside the approved traffic plan and speed-zone authorisation; the supervisor can override</td></tr>
+<tr><td>Tail prediction error ≈ 150 m (radar every 400 m, 20 s averaging)</td><td>No more precise than the current estimate; its value is moving warnings upstream sooner (late placements 10.9% → 6.7%). Denser radar or probe data can sharpen it</td></tr>
+<tr><td>Legal use of variable limits</td><td>Only values inside the approved traffic plan and speed-zone authorisation; manual override of signs comes with the pilot build</td></tr>
 </table>
 <p style="position:absolute;left:1672px;bottom:64px;width:120px;font-size:24px;color:#98A2AD;text-align:right">A4</p>
 <aside>Use if a judge pushes on "it's only a simulation" or on prediction accuracy. Say it plainly: these are relative comparisons under stated assumptions, not a forecast of real crash reductions. That is exactly why the first step is shadow mode, which changes nothing on the road.</aside>
@@ -470,14 +471,14 @@ body.shot #help, body.shot #timer, body.shot #notes { display: none !important; 
 <div style="display:flex;flex-direction:row;gap:48px">
 <img src="img/trial_crop.jpg" alt="QueueGuard guideline page: site inputs on the left; alert levels, monitoring and a virtual trial table on the right" style="width:810px;height:622px;object-fit:contain;border:1px solid #2E3740;border-radius:12px">
 <div style="flex:1;display:flex;flex-direction:column;gap:28px">
-<div style="display:flex;flex-direction:column;gap:6px"><p style="font-size:26px;font-weight:600;color:#F5A623">In</p><p style="font-size:28px;line-height:1.4;color:#C9CFD6">Speed, lanes, demand, heavy vehicles, sight lines, day or night works</p></div>
+<div style="display:flex;flex-direction:column;gap:6px"><p style="font-size:26px;font-weight:600;color:#F5A623">In</p><p style="font-size:28px;line-height:1.4;color:#C9CFD6">Speed, lanes, demand, capacity, heavy vehicles, sight lines</p></div>
 <div style="display:flex;flex-direction:column;gap:6px"><p style="font-size:26px;font-weight:600;color:#F5A623">Out</p><p style="font-size:28px;line-height:1.4;color:#C9CFD6">Queue length and growth, device positions, message library, thresholds, alert roles, KPIs</p></div>
-<div style="display:flex;flex-direction:column;gap:6px"><p style="font-size:26px;font-weight:600;color:#F5A623">Virtual trial</p><p style="font-size:28px;line-height:1.4;color:#C9CFD6">The site's own speed and demand, static signs against QueueGuard: −50% severe conflicts in this example</p></div>
+<div style="display:flex;flex-direction:column;gap:6px"><p style="font-size:26px;font-weight:600;color:#F5A623">Virtual trial</p><p style="font-size:28px;line-height:1.4;color:#C9CFD6">This site's speed, demand and truck share on our standard closure, static signs against QueueGuard, 6 seeds: −50% severe conflicts in this example</p></div>
 <div style="display:flex;flex-direction:column;gap:6px"><p style="font-size:26px;font-weight:600;color:#F5A623">Use</p><p style="font-size:28px;line-height:1.4;color:#C9CFD6">Printable for the traffic management plan; a planning aid a qualified designer verifies</p></div>
 </div>
 </div>
 <p style="position:absolute;left:1672px;bottom:64px;width:120px;font-size:24px;color:#98A2AD;text-align:right">A5</p>
-<aside>Use if asked about the "set of guidelines" in the brief, or how it adapts to a new site. The trial uses 6 seeds, so treat it as an indication; the full evaluation uses 40.</aside>
+<aside>Use if asked about the "set of guidelines" in the brief, or how it adapts to a new site. The trial uses 6 seeds (about 4 conflicts against 2), so treat it as an indication; the full evaluation uses 40. It reuses the site's speed, demand and truck share, but the road geometry and sign layout are still our standard closure; feeding the computed layout into the simulator is the next step.</aside>
 </section>
 
 </div><div id="notes"></div><div id="timer"></div><div id="help">→ / space: next · ←: back · F: full screen · N: notes · T: timer (R resets) · A: appendix</div>

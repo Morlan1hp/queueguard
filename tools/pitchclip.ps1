@@ -55,7 +55,7 @@ try {
   )
   Sim "seed=$Seed&failsafe=1" @(
     @{ t0 = 1700; t1 = 1880; seconds = 3; spot = $null;               caption = 'Fail-safe test: radar data is cut at 30 minutes…' },
-    @{ t0 = 1880; t1 = 1960; seconds = 4; spot = @('boards', 'vsls'); caption = '…after 60 s every board shows <b>PREPARE TO STOP</b> and VSL drops to 80. It never fails silent.' }
+    @{ t0 = 1880; t1 = 1960; seconds = 4; spot = @('boards', 'vsls'); caption = '…after 60 s every board shows <b>PREPARE TO STOP</b> and VSL drops to 80. A lost data link never fails silent.' }
   )
 } finally { Stop-CdpBrowser }
 

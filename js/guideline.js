@@ -95,7 +95,7 @@
       '<p>Warning distance = heavy-vehicle stopping sight distance (' + Math.round(c.ssdTruck) + ' m at ' + p.speed + ' km/h, reaction ' + c.rt + ' s) + sign legibility → <b>' + c.warnOffset + ' m</b>. ' +
       'The chain must cover ' + km(c.coverage) + ' upstream of the taper (1.5 × expected queue + warning distance).</p>' +
       '<table><tr><th>Device</th><th>Position</th><th>Notes</th></tr>' +
-      '<tr><td>Radar detectors × ' + c.nDet + '</td><td>every ' + c.spacingDet + ' m from the taper to ' + km(c.coverage) + '</td><td>On VMS trailers where possible; 20 s speed averages</td></tr>' +
+      '<tr><td>Radar detectors × ' + c.nDet + '</td><td>every ' + c.spacingDet + ' m from the taper to ' + km((c.nDet - 1) * c.spacingDet) + '</td><td>On VMS trailers where possible; 20 s speed averages</td></tr>' +
       vmsRows + vslRows + '</table>';
 
     h += '<h2>3 · Message library and display rules</h2><table><tr><th>State</th><th>Message</th><th>Shown on</th></tr>' +
@@ -170,13 +170,13 @@
         ['Maximum queue length (m)', 'maxQueueLength', 0]
       ];
       var a = mean(out.static, 'eoqConflictsPerHour'), b = mean(out.queueguard, 'eoqConflictsPerHour');
-      var h = '<table><tr><th>Measure (mean of ' + seeds + ' simulated hours)</th><th>Static signs</th><th>QueueGuard</th></tr>' + rows.map(function (r) {
+      var h = '<table><tr><th>Measure (mean of ' + seeds + ' runs, ' + (seeds * 3900 / 3600).toFixed(1) + ' simulated hours)</th><th>Static signs</th><th>QueueGuard</th></tr>' + rows.map(function (r) {
         var x = mean(out.static, r[1]), y = mean(out.queueguard, r[1]);
         var f = function (v) { return v === null ? '–' : r[2] === 'p' ? Math.round(v * 100) + '%' : v.toFixed(r[2]); };
         return '<tr><td>' + r[0] + '</td><td>' + f(x) + '</td><td><b>' + f(y) + '</b></td></tr>';
       }).join('') + '</table>';
       h += '<p>' + (a > 0 ? 'Expected change in severe end-of-queue conflicts at this site: <b>' + Math.round((b / a - 1) * 100) + '%</b>. ' : '') +
-        'Few seeds, so treat this as an indication; the full evaluation (eval.html) uses 40. Driver-behaviour assumptions are listed in docs/ASSUMPTIONS.md.</p>';
+        'Few seeds, so treat this as an indication; the full evaluation (eval.html) uses 40. The trial uses this site\'s posted speed, demand and heavy-vehicle share on the standard two-lane closure; lanes, capacity, sight distance and the layout above are not simulated yet. Driver-behaviour assumptions are listed in docs/ASSUMPTIONS.md.</p>';
       box.innerHTML = h;
     }
     step();

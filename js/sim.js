@@ -776,7 +776,7 @@
     }
     if (c.uhfDraft && !c.uhfActive && t - c.uhfDraft.t >= cfg.uhfConfirmDelay) {
       c.uhfActive = true; c.uhfNextBroadcast = t;
-      this.log(2, 'Supervisor confirmed. Broadcasting on UHF CB 40: "' + c.uhfDraft.text + '"');
+      this.log(2, 'Supervisor confirmed (simulated 20 s response). Broadcasting on UHF CB 40: "' + c.uhfDraft.text + '"');
     }
     if (c.uhfActive) {
       c.uhfDraft.text = 'All trucks: stopped traffic at km ' + (risk / 1000).toFixed(1) + ', right lane closed ahead — prepare to stop.';

@@ -97,11 +97,14 @@
       el.className = 'vsl' + (s.v ? '' : ' blank');
     });
     var c = simB.ctrl, btn = $('uhf-btn');
-    if (c.uhfDraft) {
+    if (c.failsafe) {                       // the controller stops before the UHF step while failed safe
+      $('uhf-text').textContent = 'Fail-safe active — automatic broadcasts stopped, manual control.';
+      btn.disabled = true; btn.textContent = 'Confirm';
+    } else if (c.uhfDraft) {
       $('uhf-text').textContent = (c.uhfActive ? 'Broadcasting: ' : 'Draft: ') + '"' + c.uhfDraft.text + '"';
       btn.disabled = !!c.uhfActive; btn.textContent = c.uhfActive ? 'On air' : 'Confirm';
     } else {
-      $('uhf-text').textContent = c.failsafe ? 'Fail-safe active — manual control.' : 'No message drafted.';
+      $('uhf-text').textContent = 'No message drafted.';
       btn.disabled = true; btn.textContent = 'Confirm';
     }
     var items = simB.alerts.slice(-7).reverse().map(function (al) {
