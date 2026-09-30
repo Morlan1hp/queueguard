@@ -13,6 +13,21 @@
   .src { position: absolute; left: 170px; bottom: 70px; font-size: 24px; color: #8A949E; }
   .bar { position: absolute; left: 0; top: 0; width: 24px; height: 100%; background: #F5A623; }
   ol { font-size: 40px; line-height: 1.5; color: #C9CFD6; margin: 0; padding-left: 50px; }
+  table { border-collapse: collapse; font-size: 34px; color: #C9CFD6; width: 1580px; }
+  th, td { border-bottom: 1px solid #2E3740; padding: 16px 14px; text-align: left; }
+  th { color: #98A2AD; font-size: 26px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
+  td:nth-child(2), th:nth-child(2) { width: 330px; } td:nth-child(3), th:nth-child(3) { width: 250px; }
+  .q { color: #F5A623; font-weight: 600; }
+  tr.hide { opacity: 0; }
+  .brow { display: grid; grid-template-columns: 560px 1fr 150px; align-items: center; gap: 20px; margin: 10px 0; }
+  .brow .lab { font-size: 30px; color: #C9CFD6; line-height: 1.2; }
+  .brow .lab small { display: block; font-size: 22px; color: #98A2AD; }
+  .track { display: flex; flex-direction: column; gap: 8px; }
+  .hb { height: 34px; border-radius: 5px; }
+  .hb.s { background: #8A949E; } .hb.g { background: #F5A623; }
+  .brow .val { font-size: 26px; color: #F2EFE8; line-height: 42px; }
+  .legend { font-size: 24px; color: #98A2AD; margin-top: 12px; }
+  .legend i { display: inline-block; width: 22px; height: 22px; border-radius: 4px; vertical-align: -4px; margin: 0 8px 0 18px; }
   ol b { color: #F2EFE8; }
 </style></head>
 <body><div class="bar"></div><div class="c" id="c"></div><div class="src" id="src"></div>
@@ -20,8 +35,16 @@
   var q = new URLSearchParams(location.search), CARDS = {
     title: { h: '<div class="eyebrow">FEIT Hackathon 2026 · RPM Hire · End of Queue Detection</div><h1>Queue<span>Guard</span></h1><p>Warnings that move with the queue</p>' },
     problem: { h: '<div class="eyebrow">The problem</div><h2>A roadworks queue grows upstream.<br>The warning signs don\'t move.</h2><p>Signs are set out before the shift. Minutes later the queue tail sits behind them, and drivers at 100 km/h meet stopped traffic with no warning.</p>' },
-    evidence: { h: '<div class="eyebrow">What the evidence says</div><h2>Detecting the queue is not enough.</h2><p>In a 2025 TfNSW / Deakin field trial (13 sites, 116 days), a commercial queue warning system and monochrome VMS had <b>limited or no measurable effect</b>. Colour VMS and flashing queue signs reduced speeding.</p><p>The warning has to be <b>in the right place, at the right time, and believable</b>.</p>',
-      src: 'Source: TfNSW / Deakin University, Work Zone End of Queue Study – Summary Report (iMOVE, April 2025)' },
+    evidence: { h: '<div class="eyebrow">What the evidence says</div><h2>Queue warning works — when it is designed right.</h2><p>On I-35 in Texas, an end-of-queue warning system cut work-zone crashes by <b>up to 45%</b>. But in NSW\'s 2025 field trial (13 sites, 116 days) a commercial system and monochrome VMS had <b>limited measurable effect</b>.</p><p>The warning has to be <b>in the right place, at the right time, and believable</b>.</p>',
+      src: 'Sources: TxDOT Waco District EoQ warning system (Work Zone Safety Clearinghouse); TfNSW / Deakin, Work Zone End of Queue Study (iMOVE, April 2025)' },
+    newcard: { h: '<div class="eyebrow">What is new</div><h2>Not just detect-and-warn: predict, place, prove.</h2><table id="nt">' +
+      '<tr><th>Capability</th><th>Standard queue warning</th><th class="q">QueueGuard</th></tr>' +
+      '<tr><td>Warning follows the tail, predicted 90 s ahead</td><td>fixed sign</td><td class="q">yes</td></tr>' +
+      '<tr><td>Timed into the 150–1,500 m alert window</td><td>fixed distance</td><td class="q">yes</td></tr>' +
+      '<tr><td>Credibility guard: no queue message without a queue</td><td>partly</td><td class="q">yes</td></tr>' +
+      '<tr><td>Trucks: supervisor-confirmed UHF (manual worked in NSW)</td><td>no</td><td class="q">yes</td></tr>' +
+      '<tr><td>Plans the site and pre-tests it with TfNSW metrics</td><td>no</td><td class="q">yes</td></tr></table>' },
+    bars: { h: '<div class="eyebrow">Results · 40 seeds, same drivers for every option</div><h2>Safer at the tail, no slower through the site.</h2><div id="bars"></div>' },
     how: { h: '<div class="eyebrow">How QueueGuard works</div><ol><li><b>Sense</b> — radar on the VMS trailers RPM already hires</li><li><b>Predict</b> — where the queue tail will be in 90 seconds</li><li><b>Act</b> — colour VMS at stopping distance, VSL 100 → 80 → 60, worker and truck alerts</li><li><b>Guide</b> — a site end-of-queue plan generated from the same model</li></ol>' },
     method: { h: '<div class="eyebrow">Fair test</div><h2>Same traffic. Same drivers. Only the warnings differ.</h2><p>A traffic microsimulation (IDM car following, merging, distraction). Every driver has the <b>same 60% chance</b> of noticing any sign — QueueGuard gets no credit for colour, only for <b>placement and timing</b>.</p>' },
     results: { h: '<div class="eyebrow">Results · 40 seeds per variant</div><h2 id="rh">Results</h2><p id="rp"></p>' },
@@ -33,6 +56,31 @@
   document.getElementById('src').textContent = card.src || '';
   if (q.get('rh')) document.getElementById('rh').textContent = q.get('rh');
   if (q.get('rp')) document.getElementById('rp').innerHTML = q.get('rp');
+  // animated states: render(t) (t in seconds) reveals table rows / grows bars deterministically
+  var BARS = [
+    ['Severe end-of-queue conflicts', 'per hour', 0.72, 0.23, 1.0, 2, '−68%'],
+    ['End-of-queue collisions', 'per hour', 0.23, 0.07, 0.3, 2, '−70%'],
+    ['Arrival speed at the queue', 'km/h, 85th percentile', 67.5, 53.3, 80, 1, '−14 km/h'],
+    ['Queue time with no timely warning', 'share of queue time', 32, 0, 40, 0, '32% → 0%'],
+    ['Throughput past the work zone', 'veh/h', 1113, 1113, 1300, 0, 'unchanged']
+  ];
+  function ease(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
+  window.render = function (t) {
+    var nt = document.getElementById('nt');
+    if (nt) Array.prototype.forEach.call(nt.rows, function (r, i) { r.className = (i === 0 || t >= 0.6 + i * 0.9) ? '' : 'hide'; });
+    var b = document.getElementById('bars');
+    if (b) {
+      b.innerHTML = BARS.map(function (r, i) {
+        var f = ease((t - 0.5 - i * 0.5) / 1.2), W = 900;
+        var ws = W * r[2] / r[4] * f, wg = W * r[3] / r[4] * f;
+        return '<div class="brow"><div class="lab">' + r[0] + '<small>' + r[1] + '</small></div><div class="track">' +
+          '<div class="hb s" style="width:' + Math.max(2, ws) + 'px"></div><div class="hb g" style="width:' + Math.max(2, wg) + 'px"></div></div>' +
+          '<div class="val" style="opacity:' + f + '">' + r[6] + '</div></div>';
+      }).join('') + '<div class="legend"><i style="background:#8A949E"></i>Static signs<i style="background:#F5A623"></i>QueueGuard</div>';
+    }
+    return true;
+  };
+  window.render(q.has('t') ? +q.get('t') : 99);
   if (q.get('url') && document.getElementById('url')) { document.getElementById('url').textContent = q.get('url'); document.getElementById('urlp').hidden = false; }
   if (q.get('team') && document.getElementById('team')) { document.getElementById('team').textContent = q.get('team'); document.getElementById('teamp').hidden = false; }
 </script></body></html>

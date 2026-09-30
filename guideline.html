@@ -60,11 +60,13 @@
     <label>Time demand exceeds capacity (h)<input type="number" id="dur" value="0.5" step="0.25" min="0"></label>
     <label>Crest or curve limits sight of the queue<select id="sight"><option value="0">No</option><option value="1">Yes</option></select></label>
     <label>Works period<select id="period"><option>Day</option><option selected>Night</option><option>24 h</option></select></label>
+    <button type="button" id="trial" style="background:#1D232A;color:#F5A623;border:1px solid #F5A623">Run virtual trial for this site (~20 s)</button>
     <button type="button" onclick="window.print()">Print / save as PDF</button>
     <p style="margin-top:12px"><a href="index.html">← Live demo</a> · <a href="eval.html">Evaluation</a></p>
   </form>
   <article class="doc" id="doc"></article>
 </div>
+<script src="js/sim.js"></script>
 <script src="js/guideline.js"></script>
 </body>
 </html>

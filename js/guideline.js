@@ -126,7 +126,9 @@
       '<li>Weekly: 85th-percentile arrival speed at the tail from radar; severe conflicts (TTC ≤ 1 s or DRAC ≥ 3.4 m/s²) from CCTV-trailer video, the surrogate safety measure used by TfNSW/Deakin.</li>' +
       '<li>Escalate the plan if the tail passes the most upstream board on two shifts, or if severe conflicts exceed the baseline.</li></ul>';
 
-    h += '<h2>7 · Alignment</h2><ul>' +
+    h += '<h2>7 · Virtual trial</h2><div id="trial-out"><p>Press <b>Run virtual trial</b> to simulate this site (speed, demand, heavy vehicles) with static signs only and with QueueGuard, on the same traffic, and compare the TfNSW surrogate safety measures before anything is deployed.</p></div>';
+
+    h += '<h2>8 · Alignment</h2><ul>' +
       '<li>Austroads Guide to Temporary Traffic Management (AGTTM), incorporated in Victoria\'s Code of Practice for Worksite Safety – Traffic Management (from 1 December 2023).</li>' +
       '<li>Transport for NSW / Deakin University, <i>Work Zone End of Queue Study – Summary Report</i> (iMOVE, April 2025).</li>' +
       '<li>Stopping sight distance per the Austroads road design method (reaction time and deceleration coefficients to be confirmed by the designer).</li></ul>' +
@@ -134,6 +136,54 @@
     $('doc').innerHTML = h;
   }
 
+  // ------------------------------------------------------------------ virtual trial
+  // Runs the QueueGuard microsimulation with this site's speed, demand and heavy-vehicle share,
+  // static signs vs QueueGuard, same seeds for both (common random numbers).
+  function trialOptions(seed, strategy) {
+    var speed = +$('speed').value, demand = +$('demand').value, hv = +$('hv').value / 100;
+    var o = { seed: seed, strategy: strategy, speedLimit: speed, demandPeak: demand, demandBase: Math.round(demand * 0.5),
+      demandAfter: Math.round(demand * 0.33), truckShare: hv, recordTimeSpace: false };
+    if (speed < 80) { o.useVSL = false; o.warnSpeedCap = Math.max(40, speed - 20); }
+    o.staticSpeed = [{ x: 5200, v: Math.max(60, speed - 20) }, { x: 5800, v: Math.min(60, speed) }, { x: 6700, v: speed }];
+    return o;
+  }
+  function runTrial() {
+    var seeds = 6, jobs = [], out = { static: [], queueguard: [] };
+    for (var s = 1; s <= seeds; s++) { jobs.push([s, 'static']); jobs.push([s, 'queueguard']); }
+    var btn = $('trial'), box = $('trial-out'), i = 0;
+    btn.disabled = true;
+    function step() {
+      if (i < jobs.length) {
+        var j = jobs[i++];
+        out[j[1]].push(QG.runScenario(trialOptions(j[0], j[1])));
+        box.innerHTML = '<p>Simulating… ' + i + ' / ' + jobs.length + ' runs</p>';
+        setTimeout(step, 0);
+        return;
+      }
+      btn.disabled = false;
+      function mean(a, k) { var v = a.map(function (r) { return r[k]; }).filter(function (x) { return x !== null; }); return v.length ? v.reduce(function (p, c) { return p + c; }, 0) / v.length : null; }
+      var rows = [
+        ['Severe end-of-queue conflicts per hour (TTC ≤ 1 s or DRAC ≥ 3.4 m/s²)', 'eoqConflictsPerHour', 2],
+        ['Arrival speed at the queue, 85th percentile (km/h)', 'approachSpeedP85', 0],
+        ['Queue time with no timely warning', 'queueTimeUncoveredShare', 'p'],
+        ['Throughput (veh/h)', 'throughputPerHour', 0],
+        ['Maximum queue length (m)', 'maxQueueLength', 0]
+      ];
+      var a = mean(out.static, 'eoqConflictsPerHour'), b = mean(out.queueguard, 'eoqConflictsPerHour');
+      var h = '<table><tr><th>Measure (mean of ' + seeds + ' simulated hours)</th><th>Static signs</th><th>QueueGuard</th></tr>' + rows.map(function (r) {
+        var x = mean(out.static, r[1]), y = mean(out.queueguard, r[1]);
+        var f = function (v) { return v === null ? '–' : r[2] === 'p' ? Math.round(v * 100) + '%' : v.toFixed(r[2]); };
+        return '<tr><td>' + r[0] + '</td><td>' + f(x) + '</td><td><b>' + f(y) + '</b></td></tr>';
+      }).join('') + '</table>';
+      h += '<p>' + (a > 0 ? 'Expected change in severe end-of-queue conflicts at this site: <b>' + Math.round((b / a - 1) * 100) + '%</b>. ' : '') +
+        'Few seeds, so treat this as an indication; the full evaluation (eval.html) uses 40. Driver-behaviour assumptions are listed in docs/ASSUMPTIONS.md.</p>';
+      box.innerHTML = h;
+    }
+    step();
+  }
+  $('trial').addEventListener('click', runTrial);
+
   IDS.forEach(function (id) { $(id).addEventListener('input', render); $(id).addEventListener('change', render); });
   render();
+  if (new URLSearchParams(location.search).has('trial')) runTrial();
 })();

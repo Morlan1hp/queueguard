@@ -18,6 +18,24 @@ A 2025 Transport for NSW / Deakin University field trial of end-of-queue treatme
 | **Stay credible** | No queue message without a detected queue; escalate at once, relax only after 60 s; fail-safe: no data for 60 s → every board PREPARE TO STOP, VSL 80 |
 | **Guide** | `guideline.html` turns site inputs into an end-of-queue plan: expected queue length and growth, device positions, message library, thresholds, alert roles, monitoring KPIs |
 
+## What is new
+
+Queue warning itself is proven: on I-35 in Texas, an end-of-queue warning system cut work-zone crashes by up to 45% (TxDOT Waco District, via the Work Zone Safety Clearinghouse). Standard systems work by having sensors downstream switch a fixed upstream sign when slow traffic is detected. QueueGuard keeps that idea and changes how the warning is placed, timed and trusted:
+
+| Capability | Standard queue warning | QueueGuard |
+|---|---|---|
+| Warning follows the tail, predicted 90 s ahead | fixed sign | yes |
+| Timed into the 150–1,500 m alert window (not forgotten, not too late) | fixed distance | yes |
+| Credibility guard: no queue message without a queue; 60 s hold | partly | yes |
+| Trucks: supervisor-confirmed UHF (manual broadcasts worked in the NSW trial, automatic did not) | no | yes |
+| Plans the site and pre-tests it with TfNSW metrics (`guideline.html` → *Run virtual trial*) | no | yes |
+
+## Viability
+
+* **Business:** a per-site-week software add-on to VMS, VSL and radar kit RPM already hires. It lifts utilisation of those assets and gives Tier-1 clients safety data for their reporting.
+* **Uptake:** no new hardware; VSL values only within the approved traffic management plan; the supervisor confirms UHF broadcasts and can override any message; fail-safe to PREPARE TO STOP.
+* **Value:** the Texas system saved an estimated $1.4–1.8M in societal crash costs. A severe end-of-queue crash also stops the job.
+
 ## Results
 
 Traffic microsimulation (Intelligent Driver Model, merging, driver distraction; see [docs/ASSUMPTIONS.md](docs/ASSUMPTIONS.md)). Every variant sees the same arrivals and the same drivers for a given seed. **Every sign has the same 60% chance of being noticed**, so QueueGuard gets no credit for colour or flashing, only for placement and timing. 40 seeds per variant (~43 simulated hours each); mean ± 95% CI.

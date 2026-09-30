@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>explainer</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=Oswald:wght@500;600&display=swap">
+<style>
+  html, body { margin: 0; width: 1920px; height: 1080px; background: #14181D; overflow: hidden; }
+  canvas { display: block; }
+</style></head>
+<body><canvas id="c" width="1920" height="1080"></canvas>
+<script>
+/* Animated explainer, rendered deterministically: render(t) for t in [0, 12] s.
+   Top road: static signs — the queue grows past the fixed sign and a fast car meets the tail.
+   Bottom road: QueueGuard — the warning jumps upstream ahead of the predicted tail; the car slows in time. */
+var C = document.getElementById('c'), X = C.getContext('2d');
+var AMBER = '#F5A623', RED = '#FF5A4E', TXT = '#F2EFE8', MUTED = '#98A2AD', ROAD = '#2B323B';
+function ease(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
+function text(s, x, y, size, color, weight, align, font) {
+  X.font = (weight || 400) + ' ' + size + 'px ' + (font || '"IBM Plex Sans", Arial, sans-serif');
+  X.fillStyle = color; X.textAlign = align || 'left'; X.fillText(s, x, y);
+}
+function road(y) {
+  X.fillStyle = ROAD; X.fillRect(120, y, 1680, 90);
+  X.strokeStyle = '#8A949E'; X.setLineDash([26, 26]); X.lineWidth = 3;
+  X.beginPath(); X.moveTo(120, y + 45); X.lineTo(1800, y + 45); X.stroke(); X.setLineDash([]);
+  // work zone at the right
+  X.fillStyle = 'rgba(255,138,31,0.35)'; X.fillRect(1560, y + 45, 240, 45);
+  X.fillStyle = '#FF8A1F'; for (var i = 0; i < 8; i++) X.fillRect(1560 + i * 30, y + 50, 8, 10);
+  text('WORK ZONE', 1680, y + 125, 22, '#FF8A1F', 600, 'center');
+}
+function queue(y, tailX, n) {
+  for (var x = 1540; x > tailX; x -= 52) {
+    X.fillStyle = '#D63031'; X.fillRect(x - 40, y + 8, 40, 30);
+    X.fillStyle = '#FF2A2A'; X.fillRect(x - 42, y + 8, 4, 30);
+  }
+}
+function sign(x, y, label, lit) {
+  X.strokeStyle = '#56606B'; X.lineWidth = 3; X.beginPath(); X.moveTo(x, y - 18); X.lineTo(x, y); X.stroke();
+  X.fillStyle = '#0B0D10'; X.fillRect(x - 95, y - 78, 190, 60);
+  X.strokeStyle = lit ? AMBER : '#56606B'; X.lineWidth = lit ? 4 : 2; X.strokeRect(x - 95, y - 78, 190, 60);
+  text(label[0], x, y - 52, 20, lit ? AMBER : '#8C7B55', 700, 'center', 'Consolas, monospace');
+  text(label[1], x, y - 28, 20, lit ? AMBER : '#8C7B55', 700, 'center', 'Consolas, monospace');
+}
+function car(x, y, color) { X.fillStyle = color; X.fillRect(x - 40, y + 52, 40, 30); }
+function render(t) {
+  X.clearRect(0, 0, 1920, 1080); X.fillStyle = '#14181D'; X.fillRect(0, 0, 1920, 1080);
+  // headline
+  var h1 = t < 6 ? 'The queue grows upstream. The sign doesn\'t move.' : 'QueueGuard moves the warning with the tail.';
+  var a = t < 6 ? ease(t / 0.6) : ease((t - 6) / 0.6);
+  X.globalAlpha = a; text(h1, 960, 150, 64, TXT, 600, 'center', 'Oswald, "Arial Narrow", sans-serif'); X.globalAlpha = 1;
+  // tail position grows from 1500 to 620 over 0..9 s
+  var tail = 1500 - 880 * ease(t / 9);
+  // ---- top: static
+  var yA = 330;
+  text('STATIC SIGNS', 120, yA - 110, 26, MUTED, 600);
+  road(yA); sign(1180, yA, ['PREPARE', 'TO STOP'], true); queue(yA, tail);
+  // fast car in the top road approaching the tail (from 3.5 s)
+  if (t > 3.5) {
+    var cx = 160 + (t - 3.5) * 190;
+    var hit = cx >= tail - 10;
+    if (hit) cx = tail - 10;
+    car(cx, yA - 44, '#4EA1FF');
+    if (hit) {
+      var k = (t * 3) % 1;
+      X.strokeStyle = 'rgba(255,90,78,' + (1 - k).toFixed(2) + ')'; X.lineWidth = 5;
+      X.beginPath(); X.arc(cx - 20, yA + 22, 30 + 40 * k, 0, Math.PI * 2); X.stroke();
+      text('Tail is behind the sign: no warning', cx - 20, yA + 170, 28, RED, 600, 'center');
+    }
+  }
+  // ---- bottom: QueueGuard
+  var yB = 720;
+  text('QUEUEGUARD', 120, yB - 110, 26, AMBER, 600);
+  road(yB); queue(yB, tail);
+  // predicted tail (90 s ahead) and warning board one stopping distance upstream
+  var pred = 1500 - 880 * ease(Math.min(1, (t + 1.2) / 9));
+  var boardX = Math.max(260, Math.min(pred - 250, 1300));
+  X.strokeStyle = AMBER; X.setLineDash([10, 8]); X.lineWidth = 3;
+  X.beginPath(); X.moveTo(pred, yB - 10); X.lineTo(pred, yB + 100); X.stroke(); X.setLineDash([]);
+  text('predicted tail', pred, yB + 128, 22, AMBER, 600, 'center');
+  sign(boardX, yB, ['STOPPED', 'TRAFFIC'], Math.floor(t * 2) % 2 === 0);
+  if (t > 3.5) {
+    var bx = 160 + (t - 3.5) * 190;
+    if (bx > boardX) { var over = bx - boardX; bx = boardX + over * 0.45; }   // warned driver slows down
+    bx = Math.min(bx, tail - 60);
+    car(bx, yB - 44, '#4EA1FF');
+    if (bx > boardX) { X.fillStyle = AMBER; X.beginPath(); X.arc(bx - 20, yB + 22, 7, 0, Math.PI * 2); X.fill(); text('Warned in time — slows down', bx - 20, yB + 170, 28, AMBER, 600, 'center'); }
+  }
+}
+window.render = render;
+var q = new URLSearchParams(location.search);
+render(q.has('t') ? +q.get('t') : 7);
+</script></body></html>

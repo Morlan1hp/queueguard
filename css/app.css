@@ -86,6 +86,9 @@ canvas.ts { width: 100%; flex: 1; min-height: 200px; display: block; }
 .uhf button[disabled] { opacity: 0.4; cursor: default; }
 .note { color: var(--muted); font-size: 12px; }
 
+/* spotlight for recorded video: everything outside the box is dimmed */
+.spot { position: fixed; display: none; z-index: 4; border: 3px solid var(--amber); border-radius: 12px; box-shadow: 0 0 0 4000px rgba(8,10,13,0.62); pointer-events: none; }
+
 /* caption overlay for recorded video */
 .caption { position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%); background: rgba(10,12,15,0.92); border: 1px solid var(--amber); color: var(--text); font-size: 26px; padding: 12px 22px; border-radius: 10px; max-width: 1400px; text-align: center; display: none; z-index: 5; }
 .caption.show { display: block; }

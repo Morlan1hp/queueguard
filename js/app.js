@@ -166,6 +166,22 @@
     advanceTo: function (t) { advanceTo(t); render(true); return simB.t; },
     reset: function (seed, failsafe) { state.seed = seed; state.failsafe = !!failsafe; build(); return true; },
     caption: function (html) { var el = $('caption'); el.innerHTML = html || ''; el.className = 'caption' + (html ? ' show' : ''); return true; },
+    // dim everything except the given elements (ids); [] or null removes the spotlight
+    spotlight: function (ids) {
+      var el = $('spot');
+      if (!el) { el = document.createElement('div'); el.id = 'spot'; el.className = 'spot'; document.body.appendChild(el); }
+      if (!ids || !ids.length) { el.style.display = 'none'; return true; }
+      var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+      ids.forEach(function (id) {
+        var r = $(id).getBoundingClientRect();
+        x0 = Math.min(x0, r.left); y0 = Math.min(y0, r.top); x1 = Math.max(x1, r.right); y1 = Math.max(y1, r.bottom);
+      });
+      var pad = 6;
+      el.style.display = 'block';
+      el.style.left = (x0 - pad) + 'px'; el.style.top = (y0 - pad) + 'px';
+      el.style.width = (x1 - x0 + 2 * pad) + 'px'; el.style.height = (y1 - y0 + 2 * pad) + 'px';
+      return true;
+    },
     sims: function () { return { a: simA, b: simB }; }
   };
 })();
